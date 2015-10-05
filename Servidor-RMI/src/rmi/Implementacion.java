@@ -7,12 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import rmi_interface.Interface;
 
-/**
- *
- * @author Daniel Wladdimiro Cottet
- * @title Taller de sistemas distribuidos - Clase 1
- */
-
 public class Implementacion extends UnicastRemoteObject implements Interface {
     
     static ArrayList<String> usuarios;

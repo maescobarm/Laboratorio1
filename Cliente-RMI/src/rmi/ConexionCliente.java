@@ -1,6 +1,7 @@
 package rmi;
 
 import rmi_interface.Interface;
+import rmi_interface.InterfaceTrabajador;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,11 +17,13 @@ public class ConexionCliente {
     private Registry registry;  //Registro de la conexión del usuario con el servidor
     private boolean conectado;  //Estado de conexión del usuario con el servidor
     private Interface servidor; //Interface necesaria para la comunición con el objecto del servidor
+    private InterfaceTrabajador trabajador;
 
     public ConexionCliente() {
         this.conectado = false;
         this.registry = null;
         this.servidor = null;
+        this.trabajador = null;
     }
 
     public boolean iniciarRegistro(String IP, int Puerto, String nombreObjetoRemoto) throws RemoteException {
@@ -43,7 +46,12 @@ public class ConexionCliente {
             }
 
             //Vamos al Registry y miramos el Objeto "nombreObjRemoto" para poder usarlo.
-            servidor = (Interface) registry.lookup(nombreObjetoRemoto);
+            //servidor = (Interface) registry.lookup(nombreObjetoRemoto);
+            if (nombreObjetoRemoto.equals("Ejemplo-RMI")) {
+                servidor = (Interface) registry.lookup(nombreObjetoRemoto);
+            } else if (nombreObjetoRemoto.equals("Ejemplo-RMITrabajador")) {
+                trabajador = (InterfaceTrabajador) registry.lookup(nombreObjetoRemoto);
+            }
 
             this.conectado = true;
             return true;
@@ -83,5 +91,13 @@ public class ConexionCliente {
 
     public void setServidor(Interface servidor) {
         this.servidor = servidor;
+    }
+    
+    public InterfaceTrabajador getTrabajadorServidor() {
+        return trabajador;
+    }
+
+    public void setTrabajador(InterfaceTrabajador trabajador) {
+        this.trabajador = trabajador;
     }
 }

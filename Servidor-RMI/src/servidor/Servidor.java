@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rmi.Implementacion;
+import rmi.Trabajadores;
 import rmi.ServidorRMI;
 
 /**
@@ -18,7 +19,9 @@ public class Servidor {
     public static ServidorRMI servidor;
     public static int puerto = 2014;
     public static Implementacion objetoLocal;
+    public static Trabajadores objetoLocalTrabajadores;
     public static String nombreReferenciaRemota = "Ejemplo-RMI";
+    public static String TrabajadorReferenciaRemota = "Ejemplo-RMITrabajador";
 
     static Logger logger;
 
@@ -28,6 +31,7 @@ public class Servidor {
         //Se inicializa el objeto, el cual podrá ser llamado remotamente
         try {
             objetoLocal = new Implementacion();
+            objetoLocalTrabajadores = new Trabajadores();
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());
@@ -38,8 +42,8 @@ public class Servidor {
 
         servidor = new ServidorRMI();
 
-        boolean resultadoConexion = servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto);
-        if (resultadoConexion) {
+        //boolean resultadoConexion = servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto);
+        if ((servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto)) && (servidor.iniciarConexion(objetoLocalTrabajadores, TrabajadorReferenciaRemota, puerto))) { //Resultado de la conexión
             logger.log(Level.INFO, "Se ha establecido la conexión correctamente");
         } else {
             logger.log(Level.INFO, "Ha ocurrido un error al conectarse");
@@ -52,6 +56,7 @@ public class Servidor {
         //En caso que presione una tecla el administrador, se detiene el servicio
         try {
             servidor.detenerConexion(nombreReferenciaRemota);
+            servidor.detenerConexion(TrabajadorReferenciaRemota);
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());

@@ -1,6 +1,5 @@
 package rmi;
 
-import rmi_interface.Interface;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -9,6 +8,8 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static rmi.Implementacion.logger;
+import rmi_interface.Interface;
+import rmi_interface.InterfaceTrabajador;
 
 /**
  *
@@ -46,7 +47,7 @@ public class ServidorRMI {
 
     //Ingresa el objeto referenciado al registro del servidor, de tal manera
     //que pueda ser utilizado posteriormente de forma remota
-    public boolean iniciarConexion(Interface objeto, String nombre, int Puerto) {
+    public boolean iniciarConexion(Object objeto, String nombre, int Puerto) {
 
         try {
             this.registro = getRegistro(Puerto);
@@ -55,7 +56,16 @@ public class ServidorRMI {
             //del servidor, por lo que con el método rebind quedará registrado
             //con el nombre de referencia del objeto y el objeto inicializado
             //que entró por parámetro
-            registro.rebind(nombre, objeto);
+            //Es importante analizar que se casteará que tipo de implementación es que la está entrando
+            if (objeto.getClass().equals(Implementacion.class)){
+                logger.log(Level.INFO, "Se agregara ".concat(nombre).concat(" con el objecto Usuario"));
+                //De tal manera que aquí se castee la interface que le corresponde
+                registro.rebind(nombre, (Interface) objeto);
+            }
+            else if (objeto.getClass().equals(Trabajadores.class)){
+                logger.log(Level.INFO, "Se agregara ".concat(nombre).concat(" con el objecto Tablero"));
+                registro.rebind(nombre, (InterfaceTrabajador) objeto);
+            }
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());

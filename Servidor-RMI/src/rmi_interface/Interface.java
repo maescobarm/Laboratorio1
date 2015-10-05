@@ -19,8 +19,12 @@ import java.util.ArrayList;
 
 public interface Interface extends Remote {
     
+
+    
     public boolean ingresarrrhh(String usuario) throws RemoteException;
     public boolean borrarrrhh(String usuario) throws RemoteException;
           
     public ArrayList<String> verUsuarios() throws RemoteException;
+    
+    
 }
